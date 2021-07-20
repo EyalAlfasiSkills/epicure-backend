@@ -3,10 +3,11 @@ const app = express();
 const cors = require("cors");
 const mongoose = require("mongoose");
 const config = require("./env-config");
-const mainRoutes = require("./api/main/main.routes");
+const authRoutes = require("./api/auth/auth.routes");
 const chefRoutes = require("./api/chef/chef.routes");
 const dishRoutes = require("./api/dish/dish.routes");
 const restaurantRoutes = require("./api/restaurant/restaurant.routes");
+const searchRoutes = require("./api/search/search.routes");
 // const ChefOfTheWeekModel = require("./models/ChefOfTheWeekModel");
 // const RestaurantModel = require("./models/RestaurantModel");
 // const DishModel = require("./models/DishModel");
@@ -29,7 +30,8 @@ mongoose.connect(config.dbURL, mongooseOptions, (err) => {
   }
 });
 
-app.use("/api", mainRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/search", searchRoutes);
 app.use("/api/chef", chefRoutes);
 app.use("/api/dish", dishRoutes);
 app.use("/api/restaurant", restaurantRoutes);

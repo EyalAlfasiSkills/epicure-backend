@@ -1,4 +1,4 @@
-const { queryAll } = require("./main.handler");
+const { queryAll } = require("./search.handler");
 
 async function searchAllEntities(req, res) {
   try {

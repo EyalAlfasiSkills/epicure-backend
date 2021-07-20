@@ -14,7 +14,7 @@ async function queryChefs(params) {
   }
 }
 
-async function queryChefOfTheWeek() {
+async function getChefOfTheWeek() {
   try {
     const [chef] = await ChefOfTheWeekModel.aggregate([
       {
@@ -75,7 +75,7 @@ async function updateChef(chefData) {
   }
 }
 
-async function removeChef(chefId) {
+async function deleteChef(chefId) {
   try {
     const removedChef = await ChefModel.deleteOne({ _id: chefId });
     return removedChef;
@@ -94,9 +94,9 @@ function _filterBuilder(params) {
 
 module.exports = {
   queryChefs,
-  queryChefOfTheWeek,
+  getChefOfTheWeek,
   setChefOfTheWeek,
   addChef,
   updateChef,
-  removeChef,
+  deleteChef,
 };

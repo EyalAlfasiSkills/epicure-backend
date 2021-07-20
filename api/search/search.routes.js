@@ -1,5 +1,5 @@
 const express = require("express");
-const { searchAllEntities } = require("./main.controller");
+const { searchAllEntities } = require("./search.controller");
 const router = express.Router();
 
 router.get("/all", searchAllEntities);

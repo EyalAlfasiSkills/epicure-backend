@@ -5,6 +5,7 @@ const RestaurantModel = require("../../models/RestaurantModel");
 async function queryAll(searchStr) {
   if (!searchStr) return { chefs: [], dishes: [], restaurants: [] };
   try {
+    // { $regex: /veal/i, $options: "i" }
     const regExp = { $regex: escape(searchStr), $options: "i" };
 
     const chefResults = ChefModel.find({

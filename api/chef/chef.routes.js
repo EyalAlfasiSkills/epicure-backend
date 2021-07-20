@@ -4,13 +4,13 @@ const {
   saveChef,
   deleteChef,
   getChefOfTheWeek,
-  setNewChefOfTheWeek
+  setChefOfTheWeek
 } = require("./chef.controller");
 const router = express.Router();
 
 router.get("/chef-of-the-week", getChefOfTheWeek);
 
-router.patch("/chef-of-the-week", setNewChefOfTheWeek);
+router.patch("/chef-of-the-week", setChefOfTheWeek);
 
 router.get("/:chefId?", getChefs);
 
