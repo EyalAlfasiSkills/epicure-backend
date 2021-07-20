@@ -1,6 +1,16 @@
 const express = require("express");
-const { getChefs, saveChef, deleteChef } = require("./chef.controller");
+const {
+  getChefs,
+  saveChef,
+  deleteChef,
+  getChefOfTheWeek,
+  setNewChefOfTheWeek
+} = require("./chef.controller");
 const router = express.Router();
+
+router.get("/chef-of-the-week", getChefOfTheWeek);
+
+router.patch("/chef-of-the-week", setNewChefOfTheWeek);
 
 router.get("/:chefId?", getChefs);
 
