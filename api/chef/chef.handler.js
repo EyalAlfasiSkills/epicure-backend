@@ -1,10 +1,53 @@
+const mongoose = require("mongoose");
 const ChefModel = require("../../models/ChefModel");
+const RestaurantModel = require("../../models/RestaurantModel");
+const ChefOfTheWeekModel = require("../../models/ChefOfTheWeekModel");
+const makeObjectId = mongoose.Types.ObjectId;
 
 async function queryChefs(params) {
   try {
     const filterBy = _filterBuilder(params);
-    const chefs = await ChefModel.find(filterBy).populate('restaurants');
+    const chefs = await ChefModel.find(filterBy).populate("restaurants");
     return chefs.length > 1 ? chefs : chefs[0];
+  } catch (err) {
+    throw err;
+  }
+}
+
+async function queryChefOfTheWeek() {
+  try {
+    const [chef] = await ChefOfTheWeekModel.aggregate([
+      {
+        $lookup: {
+          from: ChefModel.collection.collectionName,
+          localField: "chef",
+          foreignField: "_id",
+          as: "chef",
+        },
+      },
+      { $unwind: "$chef" },
+      {
+        $lookup: {
+          from: RestaurantModel.collection.collectionName,
+          localField: "chef.restaurants",
+          foreignField: "_id",
+          as: "chef.restaurants",
+        },
+      },
+      { $replaceRoot: { newRoot: "$chef" } },
+    ]);
+    return chef;
+  } catch (err) {
+    throw err;
+  }
+}
+
+async function setChefOfTheWeek(chefId) {
+  try {
+    const chef = await ChefOfTheWeekModel.updateOne({
+      chef: makeObjectId(chefId),
+    });
+    return chef;
   } catch (err) {
     throw err;
   }
@@ -51,6 +94,8 @@ function _filterBuilder(params) {
 
 module.exports = {
   queryChefs,
+  queryChefOfTheWeek,
+  setChefOfTheWeek,
   addChef,
   updateChef,
   removeChef,

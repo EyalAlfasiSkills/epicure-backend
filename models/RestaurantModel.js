@@ -9,4 +9,6 @@ const restaurant = new Schema({
   isPopular: { type: Boolean, default: false },
 });
 
+restaurant.index({ "$**": "text" });
+
 module.exports = mongoose.model("restaurant", restaurant);

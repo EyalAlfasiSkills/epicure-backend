@@ -11,4 +11,6 @@ const dish = new Schema({
   types: { type: [String], default: [] },
 });
 
+dish.index({ "$**": "text" });
+
 module.exports = mongoose.model("dish", dish);

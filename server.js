@@ -3,13 +3,15 @@ const app = express();
 const cors = require("cors");
 const mongoose = require("mongoose");
 const config = require("./env-config");
+const mainRoutes = require("./api/main/main.routes");
 const chefRoutes = require("./api/chef/chef.routes");
 const dishRoutes = require("./api/dish/dish.routes");
 const restaurantRoutes = require("./api/restaurant/restaurant.routes");
-const RestaurantModel = require("./models/RestaurantModel");
-const DishModel = require("./models/DishModel");
-const ChefModel = require("./models/ChefModel");
-const makeObjectId = mongoose.Types.ObjectId;
+// const ChefOfTheWeekModel = require("./models/ChefOfTheWeekModel");
+// const RestaurantModel = require("./models/RestaurantModel");
+// const DishModel = require("./models/DishModel");
+// const ChefModel = require("./models/ChefModel");
+// const makeObjectId = mongoose.Types.ObjectId;
 
 app.use(express.json());
 app.use(cors());
@@ -27,6 +29,7 @@ mongoose.connect(config.dbURL, mongooseOptions, (err) => {
   }
 });
 
+app.use("/api", mainRoutes);
 app.use("/api/chef", chefRoutes);
 app.use("/api/dish", dishRoutes);
 app.use("/api/restaurant", restaurantRoutes);
@@ -35,6 +38,13 @@ const port = process.env.PORT || 3030;
 app.listen(port, () => {
   console.log(`Server is listening at port ${port}`);
 });
+
+// app.use("/seed", async (req, res) => {
+//   const x = await ChefOfTheWeekModel.create({
+//     chef: makeObjectId("60f04b97c4daae76d2cc2142"),
+//   });
+//   res.json(x);
+// });
 
 // app.use("/seed", (req, res) => {
 //   const restaurants = [
@@ -113,7 +123,7 @@ app.listen(port, () => {
 //     restaurants.forEach((rest) => {
 //       let foundchef;
 //       if (
-//         // rest.name === "Onza" 
+//         // rest.name === "Onza"
 //         // rest.name === "Kitchen Market"
 //         rest.name === "Mashya"
 //       ) {

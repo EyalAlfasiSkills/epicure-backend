@@ -3,6 +3,7 @@ const {
   addChef,
   updateChef,
   removeChef,
+  queryChefOfTheWeek,
 } = require("./chef.handler");
 
 async function getChefs(req, res) {
@@ -10,6 +11,24 @@ async function getChefs(req, res) {
     const { chefId } = req.params;
     const chefs = await queryChefs({ _id: chefId });
     res.status(200).json(chefs);
+  } catch (err) {
+    res.status(404).send(err);
+  }
+}
+
+async function getChefOfTheWeek(req, res) {
+  try {
+    const chefOfTheWeek = await queryChefOfTheWeek();
+    res.status(200).json(chefOfTheWeek);
+  } catch (err) {
+    res.status(404).send(err);
+  }
+}
+
+async function setNewChefOfTheWeek(req, res) {
+  try {
+    const chefOfTheWeek = await queryChefOfTheWeek();
+    res.status(200).json(chefOfTheWeek);
   } catch (err) {
     res.status(404).send(err);
   }
@@ -51,4 +70,6 @@ module.exports = {
   getChefs,
   saveChef,
   deleteChef,
+  getChefOfTheWeek,
+  setNewChefOfTheWeek
 };
