@@ -1,0 +1,29 @@
+{
+    "apps": [
+        {
+            "name": "epicure-backend",
+            "script": "./server.js",
+            "env": {
+                "NODE_ENV": "development"
+            }
+        }
+    ],
+    "deploy": {
+        "staging": {
+            "key": "/Users/skills/Documents/dev/skills/epicure",
+            "user": "ubuntu",
+            "host": [
+                "ec2-18-191-84-88.us-east-2.compute.amazonaws.com"
+            ],
+            "ref": "develop",
+            "repo": "git@github.com:EyalAlfasiSkills/epicure-backend.git",
+            "path": "/home/ubuntu/epicure-backend",
+            "ssh_options": "StrictHostKeyChecking=no",
+            "post-deploy": "mkdir -p logs && npm i && pm2 reload ecosystem.json --env staging",
+            "pre-deploy-local": "echo 'Deploying code to servers'",
+            "env": {
+                "NODE_ENV": "staging"
+            }
+        }
+    }
+}

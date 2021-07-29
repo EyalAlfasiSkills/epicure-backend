@@ -39,7 +39,7 @@ app.use("/api/chef", chefRoutes);
 app.use("/api/dish", dishRoutes);
 app.use("/api/restaurant", restaurantRoutes);
 
-const port = process.env.PORT || 3030;
+const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Server is listening at port ${port}`);
 });
