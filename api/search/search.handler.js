@@ -25,7 +25,6 @@ async function queryAll(searchStr) {
     ]);
     return { chefs, dishes, restaurants };
   } catch (err) {
-    console.log({ err });
     throw err;
   }
 }

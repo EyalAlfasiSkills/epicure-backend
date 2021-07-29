@@ -1,13 +1,16 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const restaurant = new Schema({
-  imgUrl: String,
-  name: String,
-  chef: { type: Schema.Types.ObjectId, ref: "chef", default: null },
-  dishes: [{ type: Schema.Types.ObjectId, ref: "dish" }],
-  isPopular: { type: Boolean, default: false },
-});
+const restaurant = new Schema(
+  {
+    imgUrl: { type: String, default: null },
+    name: { type: String, default: "" },
+    chef: { type: Schema.Types.ObjectId, ref: "chef", default: "" },
+    dishes: { type: Array, default: [] },
+    isPopular: { type: Boolean, default: false },
+  },
+  { versionKey: false }
+);
 
 restaurant.index({ "$**": "text" });
 

@@ -1,4 +1,8 @@
 const express = require("express");
+const { validateToken } = require("../../middlewares/tokenAuthentication");
+const {
+  validateCognitoAccessToken,
+} = require("../../middlewares/validateCognitoAccessToken");
 const {
   getRestaurants,
   saveRestaurant,
@@ -7,12 +11,12 @@ const {
 
 const router = express.Router();
 
-router.get("/:restaurantId?", getRestaurants);
+router.get("/:restaurantId?", validateCognitoAccessToken, getRestaurants);
 
-router.post("/", saveRestaurant);
+router.post("/", validateCognitoAccessToken, saveRestaurant);
 
-router.put("/", saveRestaurant);
+router.put("/", validateCognitoAccessToken, saveRestaurant);
 
-router.delete("/:restaurantId", deleteRestaurant);
+router.delete("/:restaurantId", validateCognitoAccessToken, deleteRestaurant);
 
 module.exports = router;

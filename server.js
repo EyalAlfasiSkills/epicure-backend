@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
 const config = require("./env-config");
 const authRoutes = require("./api/auth/auth.routes");
@@ -13,13 +14,15 @@ const searchRoutes = require("./api/search/search.routes");
 // const DishModel = require("./models/DishModel");
 // const ChefModel = require("./models/ChefModel");
 // const makeObjectId = mongoose.Types.ObjectId;
-
 app.use(express.json());
 app.use(cors());
+app.use(cookieParser());
 
 const mongooseOptions = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  useCreateIndex: true,
+  useFindAndModify: false,
 };
 
 mongoose.connect(config.dbURL, mongooseOptions, (err) => {

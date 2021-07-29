@@ -2,12 +2,23 @@ const mongoose = require("mongoose");
 const ChefModel = require("../../models/ChefModel");
 const RestaurantModel = require("../../models/RestaurantModel");
 const ChefOfTheWeekModel = require("../../models/ChefOfTheWeekModel");
+const DishModel = require("../../models/DishModel");
 const makeObjectId = mongoose.Types.ObjectId;
 
 async function queryChefs(params) {
   try {
-    const filterBy = _filterBuilder(params);
-    const chefs = await ChefModel.find(filterBy).populate("restaurants");
+    const pipeline = [
+      {
+        $lookup: {
+          from: RestaurantModel.collection.collectionName,
+          localField: "_id",
+          foreignField: "chef",
+          as: "restaurants",
+        },
+      },
+    ];
+    if (params._id) pipeline.unshift({ $match: { _id: params._id } });
+    const chefs = await ChefModel.aggregate(pipeline);
     return chefs.length > 1 ? chefs : chefs[0];
   } catch (err) {
     throw err;
@@ -29,8 +40,8 @@ async function getChefOfTheWeek() {
       {
         $lookup: {
           from: RestaurantModel.collection.collectionName,
-          localField: "chef.restaurants",
-          foreignField: "_id",
+          localField: "chef._id",
+          foreignField: "chef",
           as: "chef.restaurants",
         },
       },
@@ -55,8 +66,9 @@ async function setChefOfTheWeek(chefId) {
 
 async function addChef(chefData) {
   try {
-    const newChef = await ChefModel.create(chefData);
-    return newChef;
+    const newChef = new ChefModel(chefData);
+    const savedChef = await newChef.save();
+    return savedChef;
   } catch (err) {
     throw err;
   }
@@ -67,7 +79,7 @@ async function updateChef(chefData) {
     const updatedChef = await ChefModel.findByIdAndUpdate(
       chefData._id,
       chefData,
-      { new: true }
+      { new: true, useFindAndModify: true }
     );
     return updatedChef;
   } catch (err) {
@@ -78,6 +90,14 @@ async function updateChef(chefData) {
 async function deleteChef(chefId) {
   try {
     const removedChef = await ChefModel.deleteOne({ _id: chefId });
+    const restaurantsToDelete = await RestaurantModel.find({ chef: chefId });
+    const restaurantIds = restaurantsToDelete.map((rest) => rest._id);
+    const dishesToDelete = await DishModel.find({
+      restaurant: { $in: restaurantIds },
+    });
+    const dishIds = dishesToDelete.map((dish) => dish._id);
+    await RestaurantModel.deleteMany({ _id: { $in: restaurantIds } });
+    await DishModel.deleteMany({ _id: { $in: dishIds } });
     return removedChef;
   } catch (err) {
     throw err;

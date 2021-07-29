@@ -3,7 +3,7 @@ const DishModel = require("../../models/DishModel");
 async function queryDishes(params) {
   try {
     const filterBy = _filterBuilder(params);
-    const dishes = await DishModel.find(filterBy).populate('restaurant');
+    const dishes = await DishModel.find(filterBy).populate("restaurant");
     return dishes.length > 1 ? dishes : dishes[0];
   } catch (err) {
     throw err;
@@ -24,7 +24,7 @@ async function updateDish(dishData) {
     const updatedDish = await DishModel.findByIdAndUpdate(
       dishData._id,
       dishData,
-      { new: true }
+      { new: true, useFindAndModify: true }
     );
     return updatedDish;
   } catch (err) {
