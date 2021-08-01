@@ -11,7 +11,7 @@ const {
 
 const router = express.Router();
 
-router.get("/:restaurantId?", validateCognitoAccessToken, getRestaurants);
+router.get("/:restaurantId?", getRestaurants);
 
 router.post("/", validateCognitoAccessToken, saveRestaurant);
 
